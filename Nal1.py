@@ -9,8 +9,8 @@ im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
 print(f'Oblika: {im.shape=}')
 print(f'Data type: {im.dtype=}')
-print(np.finfo(np.float32).max)
 
+# pretvorba in povprecenje po color channel, R + G + B / 3, rez sivinska
 tgim = im.astype(np.float32)
 tgim = np.mean(tgim, axis=2)
 
@@ -24,6 +24,7 @@ for i, val in enumerate((None, 'gray', 'jet', 'bone')):
 plt.waitforbuttonpress()
 plt.close()
 
+# izrez in spreminjanje lokacije v originalu
 tim = im[100:250, 200:400, ...].copy()
 im[100:250, 200:400, 2] = 0
 
@@ -38,10 +39,20 @@ plt.close()
 
 fig2 = plt.figure()
 fig2.suptitle('d')
+
+# 50 / 50 inverz, 255 ker vrednosti RGB 0 - 255
 tim = tgim.copy()
 tim[:, :tim.shape[1]//2] = 255 - tgim[:, :tgim.shape[1]//2]
+
 plt.imshow(tim, cmap='gray')
 plt.waitforbuttonpress()
 plt.close()
+
+fig3 = plt.figure()
+fig3.suptitle('e')
+
+# uporaba maske za bool matrix
+binim = tgim > 150
+plt.imshow(binim, cmap='gray')
 
 plt.show()
