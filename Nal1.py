@@ -7,6 +7,8 @@ im = cv2.imread(ime_slike)
 assert im is not None
 im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
+
+
 print(f'Oblika: {im.shape=}')
 print(f'Data type: {im.dtype=}')
 
@@ -51,7 +53,7 @@ plt.close()
 fig3 = plt.figure()
 fig3.suptitle('e')
 
-# uporaba maske za bool matrix
+# uporaba maske za bool matrix, make slider?
 binim = tgim > 150
 plt.imshow(binim, cmap='gray')
 
