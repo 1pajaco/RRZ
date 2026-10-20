@@ -1,6 +1,8 @@
 import numpy as np
+import cv2
+import matplotlib.pyplot as plt
 # a.) 3 bitna slikovna slika 2^3
-im = np.asarray(
+im3 = np.asarray(
 [[5, 3, 2, 7, 1],
  [7, 1, 0, 0, 0],
  [4, 5, 7, 1, 1],
@@ -8,10 +10,10 @@ im = np.asarray(
  [5, 3, 1, 6, 3]]
 )
 
-tim = np.reshape(im, -1)
+tim = np.reshape(im3, -1)
 
 # hist = np.bincount(tim) 
-# hist, _ = np.histogram(im, bins=2, range=(0, 8))
+# hist = np.histogram(im, bins=2, range=(0, 8))
 hist = (tim[:, None] == np.arange(8)).sum(axis=0)
 print(f'Histogram: {hist}')
 
@@ -23,6 +25,72 @@ print(f'Kumulativni histogram: {kum_hist}')
 
 # c.) odvisno koliko kosev bi imeli, glede na bite bi nas
 # histogram lahko zavzemal vrednosti med 0 in 15 (2^4 = 16)
-# kar pomeni da imamo lahko 16 binnov, 7, 3 ali celo 1
+# kar pomeni da imamo lahko 16 binnov, 8, 4 ali celo 1
 # zelo odvisno kaj zelimo da nas histogram prikazuje
+
+# d.)
+im = cv2.imread('./src/umbrellas.jpg')
+
+im = im.astype(np.float32)
+im = np.mean(im, axis=2)
+hist, _ = np.histogram(im, bins=8)
+x = np.arange(len(hist))
+
+plt.subplot(1, 2, 1)
+plt.imshow(im, cmap='gray')
+plt.subplot(1, 2, 2)
+plt.bar(x, hist)
+plt.waitforbuttonpress()
+plt.close()
+
+x = np.arange(8)
+hist, _ = np.histogram(im3, bins=8, range=(0, 8))
+plt.bar(x, hist)
+plt.waitforbuttonpress()
+plt.close()
+
+# e.)
+def histogram_stretch(im):
+    a = 0 # min v 2^8
+    b = 255 # max v 2^8
+    c = np.min(im) # min v hist
+    d = np.max(im) # max v hist
+
+    # tim = (im - c) * ((b-a) / (d-c)) + a # net formula
+    # tim = (im - c) * (255 / (d - c)) # lani formula
+    tim = 255 * ((im - c) / (d - c)) # letos formula
+    tim = (np.round(tim)).astype(np.uint8)
+
+    return tim
+
+im = cv2.imread('./src/phone.jpg')
+tim = histogram_stretch(im.astype(np.float32))
+
+im = (np.round(im)).astype(np.uint8)
+
+hist = np.reshape(im, -1)
+hist = np.bincount(hist)
+
+thist = np.reshape(tim, -1)
+thist = np.bincount(thist)
+
+plt.subplot(2, 2, 1)
+plt.imshow(im)
+plt.title("Image")
+plt.xticks([])
+plt.yticks([])
+plt.subplot(2, 2, 3)
+plt.stairs(hist)
+plt.yticks([])
+plt.subplot(2, 2, 2)
+plt.imshow(tim)
+plt.xticks([])
+plt.yticks([])
+plt.title("Fixed contrast")
+plt.subplot(2, 2, 4)
+plt.stairs(thist)
+plt.yticks([])
+plt.show()
+
+# f.)
 

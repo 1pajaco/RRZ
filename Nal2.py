@@ -22,9 +22,6 @@ a = 0.5
 t = np.arange(0, 30.1, 0.1)
 vals = a * 1/2 * t**2
 vals = f * W / (Z + vals*1000)
-# print(vals)
-# print(vals.ndim)
-# print(vals.shape)
 
 plt.plot(t, vals, '.')
 plt.grid(True)
@@ -32,10 +29,12 @@ plt.xlabel('Time')
 plt.ylabel('Sirina projekcije')
 plt.xticks(np.arange(0, 31, 1)) 
 plt.yticks(np.arange(0, 31, 1)) 
-plt.show()
+plt.waitforbuttonpress()
+plt.close()
+
 
 # c.)
-# kamera z luknjico se uprablja, ker je preprost model za
+# kamera z luknjico se uporablja, ker je preprost model za
 # racunati in skicirati, ni popacenja in je poceni
 # Medtem ko je leca bolj zahtevan model, saj mora leca upogibati
 # svetlobo proti tipalom, kar je pa tezje za predstavo
@@ -55,17 +54,18 @@ D = 2500 #mm
 hpx = 200 # px
 # h = ?
 
-p = 25.4 / 2500
+p = 25.4 / D
 # hpx = h / p ~ najdemo velikost v mm
 h = hpx * p
 # h = -f * H / Z
 # h * Z / -f = H
 
 H = h * Z / f
-print(f'Velikost vlaja je {H:4f}mm')
+print(f'Velikost valja je {H:.2f}mm')
 
 # e.)
 
+print()
 
 
 
