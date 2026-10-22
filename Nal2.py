@@ -1,3 +1,5 @@
+from pathlib import Path
+import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -29,7 +31,7 @@ plt.xlabel('Time')
 plt.ylabel('Sirina projekcije')
 plt.xticks(np.arange(0, 31, 1)) 
 plt.yticks(np.arange(0, 31, 1)) 
-plt.waitforbuttonpress()
+# plt.waitforbuttonpress()
 plt.close()
 
 
@@ -65,7 +67,45 @@ print(f'Velikost valja je {H:.2f}mm')
 
 # e.)
 
-print()
+folder = Path(__file__).parent / 'src' / 'bottle'
+files = sorted(folder.glob('*.jpg'))
+
+harr = []
+
+# for f in files:
+#     im = cv2.imread(f)
+
+#     plt.clf()
+#     plt.imshow(im)
+#     plt.title(f.name) 
+#     plt.pause(0.1) 
+#     obj = plt.ginput(2, timeout=0)
+
+#     (x1, y1), (x2, y2) = obj
+#     h = np.abs(y2 - y1)
+#     harr.append(h)
+
+# fan = [np.float64(414.91935483870964), np.float64(376.2096774193549), np.float64(289.11290322580646), np.float64(408.8709677419354), np.float64(223.79032258064524), np.float64(354.4354838709677)]
+hbarr = [np.float64(420.9677419354837), np.float64(377.4193548387095), np.float64(353.2258064516128), np.float64(318.14516129032256), np.float64(283.0645161290322), np.float64(206.85483870967744)]
+Zb = np.array([65.6, 73, 79.2, 86.7, 96.5, 131.7])
+Zf = np.array([68, 76.5, 99.5, 70, 124.3, 80])
+H = 24
+
+# h = -f * (H / Z)
+# f = h * Z / H
+
+fbarr = hbarr * (Zb / H)
+
+print(f'Mean: {np.mean(fbarr)}, Std: {np.std(fbarr)}')
+print((fbarr - np.mean(fbarr)) / np.std(fbarr))
+
+
+
+
+
+
+
+
 
 
 

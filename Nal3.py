@@ -1,6 +1,7 @@
 import numpy as np
 import cv2
 import matplotlib.pyplot as plt
+
 # a.) 3 bitna slikovna slika 2^3
 im3 = np.asarray(
 [[5, 3, 2, 7, 1],
@@ -19,7 +20,6 @@ print(f'Histogram: {hist}')
 
 # b.)
 # kum_hist = np.cumsum(hist))
-# kum_hist = (hist * (np.arange(8)[:, None] >= np.arange(8))).sum(axis=1)
 kum_hist = np.tri(8, dtype=int) @ hist
 print(f'Kumulativni histogram: {kum_hist}')
 
@@ -29,23 +29,25 @@ print(f'Kumulativni histogram: {kum_hist}')
 # zelo odvisno kaj zelimo da nas histogram prikazuje
 
 # d.)
-im = cv2.imread('./src/umbrellas.jpg')
+im = cv2.imread('./src/umbrellas.jpg', cv2.IMREAD_GRAYSCALE)
 
-im = im.astype(np.float32)
-im = np.mean(im, axis=2)
+# im = im.astype(np.float32)
+# im = np.mean(im, axis=2)
 hist, _ = np.histogram(im, bins=8)
 x = np.arange(len(hist))
 
 plt.subplot(1, 2, 1)
 plt.imshow(im, cmap='gray')
+plt.title('Sivinska slika')
 plt.subplot(1, 2, 2)
 plt.bar(x, hist)
+plt.title('Histogram sivinske slike')
 plt.waitforbuttonpress()
 plt.close()
 
-x = np.arange(8)
 hist, _ = np.histogram(im3, bins=8, range=(0, 8))
-plt.bar(x, hist)
+plt.bar(np.arange(8), hist)
+plt.title('Histogram iz a.) 3bitna')
 plt.waitforbuttonpress()
 plt.close()
 
@@ -79,18 +81,62 @@ plt.imshow(im)
 plt.title("Image")
 plt.xticks([])
 plt.yticks([])
+
 plt.subplot(2, 2, 3)
 plt.stairs(hist)
 plt.yticks([])
+
 plt.subplot(2, 2, 2)
 plt.imshow(tim)
 plt.xticks([])
 plt.yticks([])
+
 plt.title("Fixed contrast")
 plt.subplot(2, 2, 4)
 plt.stairs(thist)
 plt.yticks([])
-plt.show()
 
-# f.)
+plt.waitforbuttonpress()
+plt.close()
+
+# f.) https://docs.opencv.org/3.4.20/d7/d4d/tutorial_py_thresholding.html
+im = cv2.imread("./src/bird.jpg", cv2.IMREAD_GRAYSCALE)
+
+# im = cv2.imread("./src/bottle/2026-10-19-202233.jpg", cv2.IMREAD_GRAYSCALE)
+# hist, _ = np.histogram(im, bins=255)
+# plt.subplot(1, 2, 1)
+# plt.stairs(hist)
+# plt.subplot(1, 2, 2)
+# im = cv2.equalizeHist(im)
+# hist, _ = np.histogram(im, bins=255)
+# plt.stairs(hist)
+# plt.show()
+
+plt.subplot(2, 2, 1)
+plt.imshow(im, cmap='gray')
+plt.title("Original")
+
+tim = im < 50
+plt.subplot(2, 2, 2)
+plt.imshow(tim, cmap='gray')
+plt.title("Based on histogram")
+
+plt.subplot(2, 2, 3)
+_, im = cv2.threshold(im, 50, 255, cv2.THRESH_BINARY)
+plt.imshow(im, cmap='gray')
+plt.title("Based on histogram (thresh)")
+
+plt.subplot(2, 2, 4)
+_, im = cv2.threshold(im, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+plt.imshow(im, cmap='gray')
+plt.title("Otsu")
+
+plt.waitforbuttonpress()
+plt.close()
+
+# g.)
+# Deluje najboljsse ko je histogram bimodalen (ima dva jasna vrha)
+# in dolina vmes je ogromna, drugace povedano, ko imamo jasno razliko
+# med ozadnjem in predmetom, ki ga zelimo izpostaviti
+
 

@@ -91,5 +91,3 @@ def update(val):
 
 slider.on_changed(update)
 plt.show()
-
-plt.show()
