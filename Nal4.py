@@ -134,7 +134,6 @@ plt.title('Value')
 plt.waitforbuttonpress()
 plt.close()
 
-
 # d * 
 _, BinImB = cv.threshold(imB, 150, 255, cv.THRESH_BINARY)
 plt.subplot(1, 2, 1)
@@ -149,7 +148,7 @@ timB = imB.astype(np.float32)
 timT = imT.astype(np.float32)
 imBn = timB / np.sum(timT, axis=2)
 
-_, BinImB = cv.threshold(imBn, 0.5, 0.59, cv.THRESH_BINARY)
+_, BinImB = cv.threshold(imBn, 0.5, 1.0, cv.THRESH_BINARY)
 
 plt.subplot(1, 2 , 1)
 plt.imshow(imT)

@@ -122,13 +122,13 @@ plt.imshow(tim, cmap='gray')
 plt.title("Based on histogram")
 
 plt.subplot(2, 2, 3)
-_, im = cv2.threshold(im, 50, 255, cv2.THRESH_BINARY)
-plt.imshow(im, cmap='gray')
+_, tim = cv2.threshold(im, 50, 255, cv2.THRESH_BINARY)
+plt.imshow(tim, cmap='gray')
 plt.title("Based on histogram (thresh)")
 
 plt.subplot(2, 2, 4)
-_, im = cv2.threshold(im, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-plt.imshow(im, cmap='gray')
+_, tim = cv2.threshold(im, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+plt.imshow(tim, cmap='gray')
 plt.title("Otsu")
 
 plt.waitforbuttonpress()
