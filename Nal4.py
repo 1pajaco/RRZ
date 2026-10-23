@@ -157,3 +157,8 @@ plt.imshow(BinImB, cmap='gray')
 plt.waitforbuttonpress()
 plt.close()
 
+
+plt.figure()
+plt.imshow(np.meshgrid(np.linspace(0, 1, 255), np.ones((10, 1)))[0],
+cmap=plt.cm.hsv)
+plt.show()
