@@ -7,7 +7,7 @@ import cv2 as cv
 RGB = np.asarray([255, 34, 126])
 
 RGBn = (RGB / 255).astype(np.float32)
-print(f'Target value: {cl.rgb_to_hsv(RGBn)}')
+print(f'a.) Target value: {cl.rgb_to_hsv(RGBn)}')
 
 Chigh = np.max(RGBn)
 Clow = np.min(RGBn)
@@ -45,11 +45,11 @@ else:
 # V calc
 Vhsv = Chigh / 1.0
 
-print(f'What i got: {Hhsv}, {Shsv}, {Vhsv}')
+print(f'What i got: {Hhsv}, {Shsv}, {Vhsv}\n')
 
 # b.)
 HSV = np.asarray([0.65, 0.7, 0.15])
-print(f'Target value: {cl.hsv_to_rgb(HSV) * 255}')
+print(f'b.) Target value: {cl.hsv_to_rgb(HSV) * 255}')
 
 Ht = (6 * HSV[0]) % 6
 c1 = np.floor(Ht)
@@ -80,7 +80,7 @@ R = np.minimum(np.round(256.0 * RGBt[0]), 255.0)
 G = np.minimum(np.round(256.0 * RGBt[1]), 255.0)
 B = np.minimum(np.round(256.0 * RGBt[2]), 255.0)
 
-print(f'What i got: {R}, {G}, {B}')
+print(f'What i got: {R}, {G}, {B}\n')
 
 # c)
 imT = cv.imread('./src/trucks.jpg')
@@ -106,6 +106,7 @@ plt.title('Zelena')
 plt.subplot(2, 4, 4)
 plt.imshow(imB, cmap='gray')
 plt.title('Modra')
+plt.suptitle('c')
 
 im = imT.astype(np.float32)
 im = im / 255
@@ -134,31 +135,178 @@ plt.title('Value')
 plt.waitforbuttonpress()
 plt.close()
 
-# d * 
+# d
 _, BinImB = cv.threshold(imB, 150, 255, cv.THRESH_BINARY)
 plt.subplot(1, 2, 1)
 plt.imshow(imT)
 plt.subplot(1, 2, 2)
 plt.imshow(BinImB, cmap='gray')
+plt.suptitle('d')
 plt.waitforbuttonpress()
 plt.close()
 
 # e.)
-timB = imB.astype(np.float32)
-timT = imT.astype(np.float32)
-imBn = timB / np.sum(timT, axis=2)
+# timB = imB.astype(np.float32)
+# timT = imT.astype(np.float32)
+# imBn = timB / np.sum(timT, axis=2)
 
-_, BinImB = cv.threshold(imBn, 0.5, 1.0, cv.THRESH_BINARY)
+# _, BinImB = cv.threshold(imBn, 0.5, 1.0, cv.THRESH_BINARY)
 
-plt.subplot(1, 2 , 1)
+# plt.subplot(1, 2 , 1)
+# plt.imshow(imT)
+# plt.subplot(1, 2 , 2)
+# plt.imshow(BinImB, cmap='gray')
+# plt.suptitle('e')
+# plt.waitforbuttonpress()
+# plt.close()
+
+from matplotlib.widgets import Slider
+
+imBn = imB / np.maximum(imT.astype(np.float32).sum(axis=2), 1)
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+plt.subplots_adjust(bottom=0.2)
+fig.suptitle('e')
+ax1.imshow(imT)
+shown = ax2.imshow(imBn > 0.5, cmap='gray', vmin=0, vmax=1)
+
+slider = Slider(plt.axes([0.25, 0.05, 0.5, 0.04]), 'Prag', 0, 1, valinit=0.5, valstep=0.01)
+slider.on_changed(lambda v: (shown.set_data(imBn > v), fig.canvas.draw_idle()))
+plt.show()
+
+# f
+
+min = 124 / 255
+max = 150 / 255
+
+timT = (imH > min) & (imH < max)
+
+plt.subplot(2, 2, 1)
 plt.imshow(imT)
-plt.subplot(1, 2 , 2)
-plt.imshow(BinImB, cmap='gray')
+plt.suptitle('f')
+
+plt.subplot(2, 2, 2)
+plt.imshow(timT, cmap='gray')
+
+plt.subplot(2, 2, (3, 4))
+plt.imshow(np.meshgrid(np.linspace(0, 1, 255), np.ones((10, 1)))[0],
+cmap=plt.cm.hsv)
+plt.suptitle('f')
+
 plt.waitforbuttonpress()
 plt.close()
 
 
-plt.figure()
-plt.imshow(np.meshgrid(np.linspace(0, 1, 255), np.ones((10, 1)))[0],
-cmap=plt.cm.hsv)
+# g.)
+from pathlib import Path
+im = cv.imread('./src/apples.jpg')
+im = im[:, :, ::-1]
+
+im_hsv = cl.rgb_to_hsv((im / 255).astype(np.float32))
+H = im_hsv[..., 0]
+
+m_h = (H > 0.16) & (H < 0.25)
+m_hsv = (m_h) & (im_hsv[..., 1] > 0.15)
+
+plt.subplot(2, 2, (1, 2))
+plt.imshow(im)
+plt.title('Original')
+
+plt.subplot(2, 2, 3)
+plt.title('Samo hue')
+plt.imshow(m_h, cmap='gray')
+
+plt.subplot(2, 2, 4)
+plt.title('se S')
+plt.imshow(m_hsv, cmap='gray')
+plt.suptitle('g part1')
+
+plt.waitforbuttonpress()
+plt.close()
+
+# 0.026570046
+# 0.9782609
+# 0.033549782
+# 0.97530866
+# 0.99856323
+# 0.011538462
+# 0.011538462
+
+m_h = (H > 0.95) | (H < 0.03) 
+m_hsv = m_h & (im_hsv[..., 1] > 0.25)
+
+plt.subplot(2, 2, (1, 2))
+plt.imshow(im)
+plt.title('Original')
+
+plt.subplot(2, 2, 3)
+plt.title('Samo hue')
+plt.imshow(m_h, cmap='gray')
+
+plt.subplot(2, 2, 4)
+plt.title('Se S')
+plt.imshow(m_hsv, cmap='gray')
+plt.suptitle('g_part2')
+
+plt.waitforbuttonpress()
+plt.close()
+
+# 0.38020834
+# 0.38505745
+# 0.29166666
+# 0.36507937
+# 0.34397164
+# 0.27777776
+# 0.23333333
+# 0.36666667
+
+# plt.imshow(H, cmap='hsv', vmin=0, vmax=1)
+# pts = plt.ginput(8)
+# plt.close()
+# for x, y in pts:
+#     print(H[int(y), int(x)])
+
+folder = Path(__file__).parent / 'src' / 'bottle'
+files = sorted(folder.glob('*.jpg'))
+
+i = 1
+
+for file in files:    
+    im = cv.imread(file)
+    im = im[..., ::-1]
+    im_hsv = cl.rgb_to_hsv((im / 255).astype(np.float32))
+
+    H = im_hsv[..., 0]
+        
+    m_h = (H < 0.38) & (H > 0.27)
+    m_hsv = (m_h) & (im_hsv[..., 1] > 0.25)
+
+    plt.subplot(6, 2, i)
+    plt.imshow(im)
+
+    plt.subplot(6, 2, i+1)
+    plt.imshow(m_hsv, cmap='gray')
+    plt.suptitle('g_part3')
+
+    i += 2
+
+plt.show()
+
+# h.)
+def im_mask(im, bim):
+
+    # im = np.where(bim[..., None], im, 0)
+    return  im * bim[..., None]
+
+im = cv.imread('./src/apples_640x360.jpg')
+im = im[..., ::-1]
+
+mask = cv.imread('./src/umbrellas.jpg', cv.IMREAD_GRAYSCALE)
+mask = mask < 50
+plt.subplot(1, 2, 1)
+plt.imshow(im_mask(im, mask))
+
+plt.subplot(1, 2, 2)
+plt.imshow(mask, cmap='gray')
+plt.suptitle('h')
 plt.show()

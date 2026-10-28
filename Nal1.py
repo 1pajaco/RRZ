@@ -8,7 +8,7 @@ im = cv2.imread(ime_slike)
 assert im is not None
 im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 
-print(f'Oblika: {im.shape=}')
+print(f'a.) Oblika: {im.shape=}')
 print(f'Data type: {im.dtype=}')
 
 # pretvorba in povprecenje po color channel, R + G + B / 3, rez sivinska
