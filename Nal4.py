@@ -115,9 +115,9 @@ im[..., 0] = im[..., 0] / 360
 
 # Reprenzentacija barve 
 imH = im[..., 0]
-# Koliko je barva "umazna" 0.0 cista, 1.0 zelo meglena/veliko sive
+# Koliko je barva "umazna" 1.0 cista, 0.0 zelo bela/veliko sive
 imS = im[..., 1]
-# Koliko je barva svetna 0.0 zelo temna 1.0 zelo svetla
+# Koliko je barva svetla 0.0 crna 1.0 bela
 imV = im[..., 2]
 
 plt.subplot(2, 4, 6)

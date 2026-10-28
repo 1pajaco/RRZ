@@ -67,9 +67,8 @@ print(f'd.) Velikost valja je {H:.2f}mm')
 
 # e.)
 
-folder = Path(__file__).parent / 'src' / 'bottle'
-files = sorted(folder.glob('*.jpg'))
-
+# folder = Path(__file__).parent / 'src' / 'bottle'
+# files = sorted(folder.glob('*.jpg'))
 # for f in files:
 #     im = cv2.imread(f)
 
